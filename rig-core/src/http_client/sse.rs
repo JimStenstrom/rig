@@ -262,10 +262,18 @@ where
             .poll_next(cx)
         {
             Poll::Ready(Some(Err(err))) => {
-                let EventStreamError::Transport(err) = err else {
-                    panic!("u");
+                let err = match err {
+                    EventStreamError::Transport(err) => {
+                        this.handle_error(&err);
+                        err
+                    }
+                    EventStreamError::Utf8(utf8_err) => {
+                        super::Error::SseUtf8Error(utf8_err.to_string())
+                    }
+                    EventStreamError::Parser(parse_err) => {
+                        super::Error::SseParseError(parse_err.to_string())
+                    }
                 };
-                this.handle_error(&err);
                 Poll::Ready(Some(Err(err)))
             }
             Poll::Ready(Some(Ok(event))) => {

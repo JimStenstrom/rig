@@ -192,7 +192,7 @@ where
             let mut conversations = self.state.conversations.write().await;
             if let Some(history) = conversations.get_mut(&thread_id) {
                 history.push(RigMessage::Assistant {
-                    content: OneOrMany::one(AssistantContent::text(msg.content.clone())),
+                    content: OneOrMany::one(AssistantContent::text(response.clone())),
                     id: None,
                 });
             }

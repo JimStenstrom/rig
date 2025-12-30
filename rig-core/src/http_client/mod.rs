@@ -27,6 +27,10 @@ pub enum Error {
     StreamEnded,
     #[error("Invalid content type was returned: {0:?}")]
     InvalidContentType(HeaderValue),
+    #[error("SSE stream UTF-8 decoding error: {0}")]
+    SseUtf8Error(String),
+    #[error("SSE stream parsing error: {0}")]
+    SseParseError(String),
     #[cfg(not(target_family = "wasm"))]
     #[error("Http client error: {0}")]
     Instance(#[from] Box<dyn std::error::Error + Send + Sync + 'static>),
